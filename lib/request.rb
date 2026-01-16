@@ -1,12 +1,18 @@
 class Request
+  def self.build(request_string)
+    method = request_string.lines.first.split.first
 
-  def initialize(file_content)
-    @file_content = file_content
-    @split_content = file_content.split(' ')
-    @method = @split_content.first
-    @resource = @split_content[1]
-    @version = @split_content[2]
-    @headers = @split_content.drop(3)
+    case method
+    when 'GET'
+      GetRequest.new(request_string)
+    when 'POST'
+      PostRequest.new(request_string)
+    end
+  end
+
+  def initialize(request_string)
+    @request_string = request_string
+    parse
   end
 
   def method
@@ -25,14 +31,53 @@ class Request
     @headers
   end
 
-  def Params
+  def params
     @params
   end
-end
 
-request_string = File.read('get-index.request.txt')
-request = Request.new(request_string)
-p request.method
-p request.resource
-p request.version
-p request.headers
+  private
+
+  def parse
+    parse_request_line
+    parse_headers
+    parse_params
+  end
+
+  def parse_request_line
+    request_line = lines.first.strip
+    @method, @resource, @version = request_line.split(' ')
+  end
+
+  def parse_headers
+    @headers = {}
+
+    header_lines.each do |line|
+      key, value = line.split(':', 2)
+      @headers[key] = value.strip
+    end
+  end
+
+  def parse_params
+    raise NotImplementedError
+  end
+
+  def lines 
+    @lines ||= @request_string.lines
+  end
+
+  def header_lines
+    lines[1..].take_while { |line| !line.strip.empty? }
+  end
+
+  def body
+    blank = lines.index { |l| l.strip.empty? }
+    blank ? lines[(blank + 1)..].join : ''
+  end
+
+  def parse_key_value_pairs(string)
+    string.split('&').each_with_object({}) do |pair, hash|
+      key, value = pair.split('=', 2)
+      hash[key] = value.strip
+    end
+  end
+end
