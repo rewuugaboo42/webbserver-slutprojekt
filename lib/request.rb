@@ -1,4 +1,6 @@
 class Request
+  attr_reader :method, :resource, :version, :headers, :params
+
   def self.build(request_string)
     method = request_string.lines.first.split.first
 
@@ -13,26 +15,6 @@ class Request
   def initialize(request_string)
     @request_string = request_string
     parse
-  end
-
-  def method
-    @method
-  end
-  
-  def resource
-    @resource
-  end
-
-  def version
-    @version
-  end
-
-  def headers
-    @headers
-  end
-
-  def params
-    @params
   end
 
   private
