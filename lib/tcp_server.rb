@@ -3,6 +3,7 @@ require_relative 'request'
 require_relative 'get_request'
 require_relative 'post_request'
 require_relative 'router'
+require_relative 'response'
 
 class HTTPServer
   def initialize(port)
@@ -15,6 +16,7 @@ class HTTPServer
 
     @router.get "/hello" do |request|
       "<h1>Hello, World!</h1>"
+      #erb(:"test/index")
     end
   end
 
@@ -33,16 +35,12 @@ class HTTPServer
 
       if route
         body = route[:block].call(request.resource)
-        status = "HTTP/1.1 200 OK"
+        response = Response.new(status: 200, body: body)
       else
-        body = "Not Found"
-        status = "HTTP/1.1 404 NOT FOUND"
+        response = Response.new(status: 404, body: "Not Found")
       end
 
-      session.print "#{status}\r\n"
-      session.print "Content-Type: text/html\r\n"
-      session.print "\r\n"
-      session.print body
+      session.print response.to_s
       session.close
     end
   end
