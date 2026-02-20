@@ -1,13 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sinatra klon test</title>
-    <link rel="stylesheet" type="text/css" href="/style.css?<%=Time.now.to_i%>">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sinatra Klon Test</title>
+  <link rel="stylesheet" type="text/css" href="/style.css?<%= Time.now.to_i %>">
 </head>
 <body>
-    <a href="/test">Todos</a>
-    <%= yield %>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-brand">SinatraKlon</a>
+      <ul class="nav-links">
+        <li><a href="/">Todos</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero Image -->
+  <div class="hero">
+    <img src="/img/hero.jpg" alt="Hero Image" class="hero-img">
+    <div class="hero-text">
+      <h1>Welcome to SinatraKlon</h1>
+      <p>Your lightweight Sinatra app with style ✨</p>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <main class="container">
+    <%= @content %>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; <%= Time.now.year %> SinatraKlon. All rights reserved.</p>
+  </footer>
 </body>
 </html>

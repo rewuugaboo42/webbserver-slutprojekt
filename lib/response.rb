@@ -16,7 +16,6 @@ class Response
 
   def to_s
     response = +"HTTP/1.1 #{@status} #{STATUS[@status]}\r\n"
-    #response = +"HTTP/1.1 #{@status} #{STATUS[@status]}\r\n"
 
     @headers.each do |key, value|
       response << "#{key}: #{value}\r\n"

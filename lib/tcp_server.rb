@@ -1,23 +1,14 @@
 require 'socket'
+require_relative 'application'
 require_relative 'request'
 require_relative 'get_request'
 require_relative 'post_request'
-require_relative 'router'
 require_relative 'response'
 
 class HTTPServer
-  def initialize(port)
+  def initialize(port, app)
     @port = port
-    @router = Router.new
-
-    @router.get "/" do |request|
-      "<h1>Root side not found!</h1>"
-    end 
-
-    @router.get "/hello" do |request|
-      "<h1>Hello, World!</h1>"
-      #erb(:"test/index")
-    end
+    @app  = app
   end
 
   def start
@@ -30,21 +21,14 @@ class HTTPServer
         data += line
       end
 
-      request = Request.build(data)
-      route = @router.match(request)
-
-      if route
-        body = route[:block].call(request.resource)
-        response = Response.new(status: 200, body: body)
-      else
-        response = Response.new(status: 404, body: "Not Found")
-      end
+      request  = Request.build(data)
+      response = @app.call(request)
+      if response == nil
+        if File.exist?('./public/#{request.resource}')
+          #las in filen... generera response
 
       session.print response.to_s
       session.close
     end
   end
 end
-
-server = HTTPServer.new(4567)
-server.start

@@ -1,16 +1,14 @@
 class Router
-  attr_reader :routes
-
   def initialize
     @routes = []
   end
 
   def get(path, &block)
-    @routes << {
-      method: "GET",
-      path: path,
-      block: block
-    }
+    @routes << { method: "GET", path: path, block: block }
+  end
+
+  def post(path, &block)
+    @routes << { method: "POST", path: path, block: block }
   end
 
   def match(request)
