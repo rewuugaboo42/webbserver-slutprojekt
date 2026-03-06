@@ -7,30 +7,22 @@ app.get "/" do |request|
   #"<h1>Root side not found!</h1>"
   erb :home
 end
-
+#snygtt jobbat // malte ostling
 app.get "/hello" do |request|
-  p "//////////////////////////////////////////////////////"
-  p "/hello"
   erb :hello
 end
 
-app.get "/about" do |request|
-  erb :home
-end
-
-#body = route.block.call(request.params)
-# /add/2/5
 app.get "/add/:num1/:num2" do |num1, num2| 
   sum = num1.to_i + num2.to_i
   puts sum
+  redirect "/"
+end
+
+app.get "/fps" do |request|
+  erb :fps
 end
 
 app.post "/hello" do |request|
-  p request.method
-  p request.resource
-  p request.version
-  p request.headers
-  p request.params
   erb :hello, { name: request.params["name"] }
 end
 
